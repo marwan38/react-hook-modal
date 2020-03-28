@@ -10,7 +10,7 @@ import { ModalContext } from "./ModalProvider";
 export function useModal<T extends IModalProps>(
   modal: React.FC<T>,
   props?: Omit<T, "stateKey">,
-  state: Omit<IModalState, "close"> = {}
+  state: Omit<IModalState, "close"> & Partial<T> = {}
 ) {
   const modalContext = useContext(ModalContext);
   if (!modalContext) {

@@ -35,7 +35,7 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
     stateKey: string,
     Modal: React.FC<T>,
     props: Omit<T, "stateKey">,
-    state: Omit<IModalState, "close">
+    state: Omit<IModalState, "close"> & Partial<T>
   ) => {
     /**
      * Called by the modal initializer
