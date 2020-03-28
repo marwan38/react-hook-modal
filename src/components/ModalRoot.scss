@@ -1,0 +1,23 @@
+#modal__root {
+    width: 100vw;
+    height: 100vh;
+
+    position: fixed;
+
+    .overlay {
+        background: rgb(0, 0, 0);
+        opacity: 0.8;
+
+        width: inherit;
+        height: inherit;
+    }
+
+    .--container {
+        background: white;
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
