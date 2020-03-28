@@ -1,10 +1,11 @@
 {
-  "name": "react-hook-modal",
+  "name": "@marwan38/react-hook-modal",
   "version": "0.1.0",
   "description": "",
   "main": "build/index.js",
   "module": "build/index.es.js",
   "jsnext:main": "build/index.es.js",
+  "files": ["build"],
   "scripts": {
     "build": "rollup -c",
     "lint": "standard",
@@ -14,7 +15,7 @@
     "build-storybook": "build-storybook"
   },
   "keywords": [],
-  "author": "",
+  "author": "Marwan Fikrat",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.9.0",
@@ -96,5 +97,9 @@
     "react": "^16",
     "react-dom": "^16"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marwan38/react-hook-modal.git"
+  }
 }
