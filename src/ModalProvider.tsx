@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useCallback } from "react";
 import produce from "immer";
 import {
   IModalContext,
@@ -7,11 +7,6 @@ import {
   IModalState
 } from "./types";
 import { ModalPortal } from "./ModalContainer";
-
-const initialModalState: IModalState = {
-  isLoading: false,
-  close: () => void 0
-};
 
 export const ModalContext = createContext<IModalContext>({
   add: () => ({
@@ -36,12 +31,12 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
   const [modalsState, setModalsState] = useState<{
     [key: string]: IModalState;
   }>({});
-
   const add = <T extends IModalProps>(
+    stateKey: string,
     Modal: React.FC<T>,
-    props: Omit<T, "stateKey">
+    props: Omit<T, "stateKey">,
+    state: Omit<IModalState, "close">
   ) => {
-    const stateKey = String(Math.random() + Date.now());
     /**
      * Called by the modal initializer
      * Closes the modal
@@ -67,17 +62,18 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
      * Called by the modal initializer
      * Opens the modal
      */
-    const open = () =>
+    const open = () => {
+      // Initialize state for modal
+      void setModalsState(modalsState =>
+        produce(modalsState, draftState => {
+          draftState[stateKey] = {
+            ...state,
+            close
+          };
+        })
+      );
+
       void setModals(modals => {
-        // Initialize state for modal
-        setModalsState(modalsState =>
-          produce(modalsState, draftState => {
-            draftState[stateKey] = {
-              ...initialModalState,
-              close
-            };
-          })
-        );
         // Create the element
         return produce(modals, draft => {
           // @ts-ignore 2322
@@ -90,6 +86,7 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
           React.Children.forEach(draft[stateKey].props.children, console.log);
         });
       });
+    };
 
     /**
      * Called by the modal initializer
@@ -99,11 +96,17 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
       key: K,
       value: V
     ) =>
-      void setModalsState(modalsState =>
-        produce(modalsState, draftStates => {
-          draftStates[stateKey][key] = value;
-        })
-      );
+      void setModalsState(_modalsState => {
+        return produce(_modalsState, draftStates => {
+          // State is only initialised after the modal has opened
+          // in the future we might want to initialize state on add
+          // and only remove it when the modal is removed
+          const hasState = _modalsState[stateKey];
+          if (hasState) {
+            draftStates[stateKey][key] = value;
+          }
+        });
+      });
 
     return {
       open,

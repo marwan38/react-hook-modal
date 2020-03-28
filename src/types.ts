@@ -5,23 +5,27 @@ export interface IModalProps {
   stateKey: string;
 }
 export interface IModalState {
-  isLoading: boolean;
   close: () => void;
+  [key: string]: any;
+}
+
+export interface IModalActions {
+  open: () => void;
+  close: () => void;
+  setState: <K extends keyof IModalState, V extends IModalState[K]>(
+    key: K,
+    value: V
+  ) => void;
 }
 
 export interface IModalContext {
   /** Adds a modal component into the Modal Context */
   add: (
+    stateKey: string,
     modal: React.FC<any>,
-    actions: Omit<IModalProps, "stateKey" | "onClose">
-  ) => {
-    open: () => void;
-    close: () => void;
-    setState: <K extends keyof IModalState, V extends IModalState[K]>(
-      key: K,
-      value: V
-    ) => void;
-  };
+    props: Omit<IModalProps, "stateKey" | "onClose">,
+    state?: Omit<IModalState, "close">,
+  ) => IModalActions;
   modalsState: { [key: string]: IModalState };
 }
 

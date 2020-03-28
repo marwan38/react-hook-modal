@@ -8,7 +8,13 @@ import {
   select
 } from "@storybook/addon-knobs";
 import { config } from "react-spring";
-import { ModalRoot, ModalProvider, useModal, IModalProps } from "../src";
+import {
+  ModalRoot,
+  ModalProvider,
+  useModal,
+  IModalProps,
+  useModalState
+} from "../src";
 import { Props as ModalRootProps } from "../src/components/ModalRoot";
 import { Animations } from "../src/animations";
 import {
@@ -28,6 +34,8 @@ const SampleModal: React.FC<Props & { stateKey: string }> = ({
   stateKey,
   ...rest
 }) => {
+  const state = useModalState(stateKey);
+  console.log(state);
   return (
     <ModalRoot stateKey={stateKey} {...rest}>
       {({ close }) => (
@@ -43,10 +51,14 @@ const Modal: React.FC<Props> = ({
   modalContainerAnim,
   overlaySpringConfig
 }) => {
-  const modal = useModal(SampleModal, {
-    modalContainerAnim,
-    overlaySpringConfig
-  });
+  const modal = useModal(
+    SampleModal,
+    {
+      modalContainerAnim,
+      overlaySpringConfig
+    }
+  );
+
   return (
     <div>
       <button onClick={modal.open}>Open</button>
@@ -74,6 +86,7 @@ export const Main = () => {
   return (
     <ModalProvider>
       <Modal
+        key="modal-stories-1"
         modalContainerAnim={Object.assign(animation, { config: animConfig })}
         overlaySpringConfig={{ duration: overlayDuration }}
       />
