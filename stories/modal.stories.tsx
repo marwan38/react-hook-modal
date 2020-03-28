@@ -22,9 +22,12 @@ export default {
   decorators: [withKnobs]
 };
 
-interface Props extends Omit<ModalRootProps, "children"> {}
+interface Props extends Omit<ModalRootProps, "children" | "stateKey"> {}
 
-const SampleModal: React.FC<Props> = ({ stateKey, ...rest }) => {
+const SampleModal: React.FC<Props & { stateKey: string }> = ({
+  stateKey,
+  ...rest
+}) => {
   return (
     <ModalRoot stateKey={stateKey} {...rest}>
       {({ close }) => (
@@ -60,9 +63,7 @@ export const Main = () => {
   const animConfig = select(
     "Config",
     config as any,
-    config[
-      Object.keys(config)[Object.keys(config).length - 1]
-    ] as SelectTypeKnobValue
+    config.default as SelectTypeKnobValue
   );
   const overlayDuration = number("Overlay anim duration", 400, {
     range: true,
