@@ -1,7 +1,12 @@
-export const SLIDE_IN_TOP = {
+import { CSSProperties } from "react";
+import { UseTransitionProps } from "react-spring";
+
+type SpringAnimType = UseTransitionProps<boolean, CSSProperties>;
+
+const SLIDE_IN_TOP: SpringAnimType = {
   from: {
     opacity: 0,
-    transform: "translate3d(-50%, -999%, 0)"
+    transform: "translate3d(-50%, -200%, 0)"
   },
   enter: {
     opacity: 1,
@@ -9,11 +14,11 @@ export const SLIDE_IN_TOP = {
   },
   leave: {
     opacity: 0,
-    transform: "translate3d(-50%, -999%, 0)"
+    transform: "translate3d(-50%, -200%, 0)"
   }
 };
 
-export const FADE = {
+const FADE: SpringAnimType = {
   from: {
     opacity: 0,
     position: "absolute"
@@ -25,3 +30,11 @@ export const FADE = {
     opacity: 0
   }
 };
+
+export const Animations = {
+  SLIDE_IN_TOP,
+  FADE
+};
+
+type AnimationKeys = keyof typeof Animations;
+export type Animation = typeof Animations[AnimationKeys];

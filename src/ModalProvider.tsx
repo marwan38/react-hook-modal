@@ -83,15 +83,8 @@ export const ModalProvider: React.FC<IModalContainerProviderProps> = ({
           const Component = <Modal key={stateKey} />;
           draft[stateKey] = React.cloneElement(Component, {
             stateKey,
+            close,
             ...props
-            // onClose: function() {
-            //   close();
-            //   // Arguments is a javascript reserved keywords
-            //   // whatever the arguments the parent passes into onClose
-            //   // will be passed to the caller
-            //   // eslint-disable-next-line react/prop-types
-            //   return props.onClose.apply(null, arguments);
-            // }
           });
 
           React.Children.forEach(draft[stateKey].props.children, console.log);

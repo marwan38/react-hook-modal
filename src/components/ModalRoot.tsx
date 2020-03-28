@@ -1,23 +1,28 @@
 import * as React from "react";
-import { useSpring, animated, useTransition } from "react-spring";
+import {
+  useSpring,
+  animated,
+  useTransition,
+  UseTransitionProps
+} from "react-spring";
 import "./ModalRoot.scss";
 import { useModalState } from "../useModalState";
 import { IModalProps } from "../types";
-import { FADE } from "../animations";
+import { Animations, Animation } from "../animations";
 
 interface ModalRootChildProps {
   close: () => void;
 }
 
 interface Props extends Partial<IModalProps> {
+  modalContainerAnim?: Animation;
   children: ((args: ModalRootChildProps) => React.ReactNode) | React.ReactNode;
-  modalContainerAnim?: any;
 }
 
 const ModalRoot: React.FunctionComponent<Props> = ({
   children,
   stateKey,
-  modalContainerAnim = FADE
+  modalContainerAnim = Animations.FADE
 }) => {
   const { close } = useModalState(stateKey as string);
 
@@ -51,9 +56,8 @@ const ModalRoot: React.FunctionComponent<Props> = ({
         className="overlay"
         onClick={toggleClose}
       />
-      {_modalContainerAnim.map(({ key, item, props }) => {
-        console.log(props.opacity);
-        return (
+      {_modalContainerAnim.map(
+        ({ key, item, props }) =>
           item && (
             <animated.div key={key} style={props} className="--container">
               {typeof children === "function"
@@ -61,8 +65,7 @@ const ModalRoot: React.FunctionComponent<Props> = ({
                 : children}
             </animated.div>
           )
-        );
-      })}
+      )}
       ))
     </div>
   );

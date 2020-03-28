@@ -1,21 +1,25 @@
 import * as React from "react";
 import "./ModalRoot.scss";
-import { useModal, useModalState, ModalProvider } from "../";
+import { useModal, ModalProvider } from "../";
 import ModalRoot from "./ModalRoot";
 import { IModalProps } from "../types";
-import { SLIDE_IN_TOP } from "../animations";
+import { Animations } from "../animations";
 
-interface Props {}
+interface Props extends IModalProps {}
 
-const SampleModal: React.FC<IModalProps> = ({ stateKey }) => {
+const SampleModal: React.FC<Props> = ({ stateKey }) => {
   return (
-    <ModalRoot stateKey={stateKey} modalContainerAnim={SLIDE_IN_TOP}>
-      {({ close }) => <div onClick={close}>I am child</div>}
+    <ModalRoot stateKey={stateKey} modalContainerAnim={Animations.SLIDE_IN_TOP}>
+      {({ close }) => (
+        <div style={{ width: 500, padding: 25 }} onClick={close}>
+          I am child
+        </div>
+      )}
     </ModalRoot>
   );
 };
 
-const Sample: React.FunctionComponent<Props> = () => {
+const Sample: React.FC = () => {
   const modal = useModal(SampleModal);
 
   return (
