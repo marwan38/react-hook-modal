@@ -1,10 +1,7 @@
 import * as React from "react";
 import {
   withKnobs,
-  text,
-  boolean,
   number,
-  object,
   select
 } from "@storybook/addon-knobs";
 import { config } from "react-spring";
@@ -12,14 +9,12 @@ import {
   ModalRoot,
   ModalProvider,
   useModal,
-  IModalProps,
   useModalState
 } from "../src";
 import { Props as ModalRootProps } from "../src/components/ModalRoot";
 import { Animations } from "../src/animations";
 import {
   SelectTypeKnobValue,
-  SelectTypeOptionsProp
 } from "@storybook/addon-knobs/dist/components/types";
 
 export default {
