@@ -3,19 +3,23 @@ import * as React from "react";
 import ModalRoot from "../src/components/ModalRoot";
 import { useModal, useModalState, IModalProps, ModalProvider } from "../src";
 
-export const SampleModal: React.FC<IModalProps> = ({ stateKey, ...rest }) => {
+export const StubModal: React.FC<IModalProps & any> = ({
+  stateKey,
+  text = "I am child",
+  ...rest
+}) => {
   const { close } = useModalState(stateKey);
   return (
     <ModalRoot stateKey={stateKey} {...rest}>
       <div style={{ width: 500, padding: 25 }} onClick={close}>
-        I am child
+        {text}
       </div>
     </ModalRoot>
   );
 };
 
-export const StubModal: React.FC<{ modalTemplate?: React.FC }> = ({
-  modalTemplate = SampleModal
+export const StubModalLauncher: React.FC<{ modalTemplate?: React.FC }> = ({
+  modalTemplate = StubModal
 }) => {
   const modal = useModal(modalTemplate);
   return (
@@ -25,8 +29,6 @@ export const StubModal: React.FC<{ modalTemplate?: React.FC }> = ({
   );
 };
 
-export const tree = (
-  <ModalProvider>
-    <StubModal />
-  </ModalProvider>
-);
+export const withProvider = element => <ModalProvider>{element}</ModalProvider>;
+
+export const tree = withProvider(<StubModalLauncher />);

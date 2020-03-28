@@ -4,10 +4,11 @@ import "@testing-library/jest-dom/extend-expect";
 
 import ModalRoot, { Props } from "../src/components/ModalRoot";
 import { ModalProvider } from "../src";
-import { StubModal } from "./stubModal";
+import { StubModalLauncher } from "./stubModal";
+
 const tree = (component: React.FC<Props>) => (
   <ModalProvider>
-    <StubModal modalTemplate={component} />
+    <StubModalLauncher modalTemplate={component} />
   </ModalProvider>
 );
 
@@ -30,10 +31,10 @@ describe("ModalRoot", () => {
         </ModalRoot>
       ))
     );
-    
+
     fireEvent.click(getByText("Open"));
     act(() => {
-        fireEvent.click(getByText("CloseButton"))
+      fireEvent.click(getByText("CloseButton"));
     });
   });
 });

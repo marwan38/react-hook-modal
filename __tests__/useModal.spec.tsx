@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react-hooks";
 import "@testing-library/jest-dom/extend-expect";
 
-import { SampleModal } from "./stubModal";
+import { StubModal } from "./stubModal";
 import { useModal } from "../src";
 
 describe("useModal", () => {
@@ -9,7 +9,7 @@ describe("useModal", () => {
     const {
       // @ts-ignore
       result
-    } = renderHook(() => useModal(SampleModal));
+    } = renderHook(() => useModal(StubModal));
 
     const {
       current: { open, close, setState }
