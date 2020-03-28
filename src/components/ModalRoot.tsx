@@ -3,7 +3,6 @@ import {
   useSpring,
   animated,
   useTransition,
-  UseTransitionProps,
   useChain,
   config,
   SpringConfig
@@ -19,7 +18,7 @@ interface ModalRootChildProps {
   close: () => void;
 }
 
-export interface Props extends Partial<IModalProps> {
+export interface Props extends IModalProps {
   modalContainerAnim?: Animation;
   overlaySpringConfig?: SpringConfig;
   children: ((args: ModalRootChildProps) => React.ReactNode) | React.ReactNode;
@@ -82,7 +81,8 @@ const ModalRoot: React.FunctionComponent<Props> = ({
           item && (
             <animated.div key={key} style={props} className="--container">
               {typeof children === "function"
-                ? children({ close: toggleClose })
+                // @ts-ignore
+                ? children({ close: toggleClose }) 
                 : children}
             </animated.div>
           )

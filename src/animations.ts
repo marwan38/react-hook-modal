@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { UseTransitionProps, config } from "react-spring";
+import { UseTransitionProps } from "react-spring";
 
 type SpringAnimType = UseTransitionProps<boolean, CSSProperties>;
 
@@ -15,7 +15,7 @@ const MODAL_SLIDE_IN_TOP: SpringAnimType = {
   leave: {
     opacity: 0,
     transform: "translate3d(-50%, -200%, 0)"
-  },
+  }
 };
 
 const MODAL_FADE: SpringAnimType = {

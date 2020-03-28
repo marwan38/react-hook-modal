@@ -41,7 +41,7 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
     Modal: React.FC<T>,
     props: Omit<T, "stateKey">
   ) => {
-    const stateKey = Math.random() + Date.now();
+    const stateKey = String(Math.random() + Date.now());
     /**
      * Called by the modal initializer
      * Closes the modal
@@ -81,8 +81,7 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
         // Create the element
         return produce(modals, draft => {
           // @ts-ignore 2322
-          const Component = <Modal key={stateKey} />;
-          draft[stateKey] = React.cloneElement(Component, {
+          draft[stateKey] = React.cloneElement(<Modal key={stateKey} />, {
             stateKey,
             close,
             ...props
