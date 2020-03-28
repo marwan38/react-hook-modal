@@ -2,11 +2,11 @@ import React, { useState, createContext } from "react";
 import produce from "immer";
 import {
   IModalContext,
-  IModalContainerProviderProps,
+  IModalProviderProps,
   IModalProps,
   IModalState
 } from "./types";
-import { ModalContainer } from "./ModalContainer";
+import { ModalPortal } from "./ModalContainer";
 
 const initialModalState: IModalState = {
   isLoading: false,
@@ -26,8 +26,9 @@ export const ModalContext = createContext<IModalContext>({
  * Root modal provider - Should sit in the app root
  * All modal state lives here
  */
-export const ModalProvider: React.FC<IModalContainerProviderProps> = ({
-  children
+export const ModalProvider: React.FC<IModalProviderProps> = ({
+  children,
+  rootElement = document.body
 }) => {
   const [modals, setModals] = useState<{ [key: string]: React.ReactElement }>(
     {}
@@ -121,9 +122,10 @@ export const ModalProvider: React.FC<IModalContainerProviderProps> = ({
     >
       {children}
       {Object.keys(modals).map((key, i) => (
-        <ModalContainer
+        <ModalPortal
           modal={modals[key]}
           key={`modal-container-modal-${i}`}
+          rootElement={rootElement}
         />
       ))}
     </ModalContext.Provider>

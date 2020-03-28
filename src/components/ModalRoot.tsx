@@ -3,34 +3,40 @@ import {
   useSpring,
   animated,
   useTransition,
-  UseTransitionProps
+  UseTransitionProps,
+  useChain,
+  config,
+  SpringConfig
 } from "react-spring";
 import "./ModalRoot.scss";
 import { useModalState } from "../useModalState";
 import { IModalProps } from "../types";
 import { Animations, Animation } from "../animations";
 
+import "./ModalRoot";
+
 interface ModalRootChildProps {
   close: () => void;
 }
 
-interface Props extends Partial<IModalProps> {
+export interface Props extends Partial<IModalProps> {
   modalContainerAnim?: Animation;
+  overlaySpringConfig?: SpringConfig;
   children: ((args: ModalRootChildProps) => React.ReactNode) | React.ReactNode;
 }
 
 const ModalRoot: React.FunctionComponent<Props> = ({
   children,
   stateKey,
-  modalContainerAnim = Animations.FADE
+  overlaySpringConfig = config.default,
+  modalContainerAnim = Animations.MODAL_FADE
 }) => {
   const { close } = useModalState(stateKey as string);
 
-  /** Used for animation */
+  /** Used for animation initialization */
   const justInitialized = React.useRef(true);
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = React.useState(true);
   React.useEffect(() => {
-    setVisible(true);
     justInitialized.current = false;
   }, []);
 
@@ -38,16 +44,31 @@ const ModalRoot: React.FunctionComponent<Props> = ({
     setVisible(false);
   }
 
+  /** The root container/overlay animation */
+  const containerRef = React.useRef<any>();
   const fadeAnimation = useSpring({
+    from: {
+      opacity: 0
+    },
     opacity: visible ? 0.75 : 0,
+    ref: containerRef,
     onRest: () => {
       if (justInitialized.current === false && visible === false) {
         close();
       }
-    }
+    },
+    config: overlaySpringConfig
   });
 
-  const _modalContainerAnim = useTransition(visible, null, modalContainerAnim);
+  /** Modal container animation */
+  const modalRef = React.useRef();
+  const _modalContainerAnim = useTransition(
+    visible,
+    null,
+    Object.assign(modalContainerAnim, { ref: modalRef })
+  );
+
+  useChain(visible ? [containerRef, modalRef] : [modalRef, containerRef]);
 
   return (
     <div id="modal__root">

@@ -4,8 +4,8 @@ export {
   IModalProps,
   IModalState,
   IModalContext,
-  IModalContainerProviderProps,
-  IModalContainerProps
+  IModalProviderProps,
+  IModalPortalProps
 } from "./types";
 
 export { ModalRoot };
