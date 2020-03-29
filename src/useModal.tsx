@@ -6,9 +6,9 @@ import { ModalContext } from "./ModalProvider";
  * @param modal - React.ReactNode
  * @param actions - onSubmit and onClose handlers
  */
-export function useModal<P, S>(
+export function useModal<P extends Omit<IModalProps, "close" | "state">, S>(
   modal: React.FC<P>,
-  props?: Omit<P, "close" | "stateKey">,
+  props?: P,
   state?: S
 ) {
   const modalContext: IModalContext<P, S> = useContext(ModalContext);
