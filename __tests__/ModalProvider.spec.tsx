@@ -11,13 +11,8 @@ import {
 import "@testing-library/jest-dom/extend-expect";
 
 import { tree, StubModal, withProvider } from "./stubModal";
-import {
-  useModal,
-  IModalProps,
-  useModalState,
-  ModalRoot,
-  ModalProvider
-} from "../src";
+import { useModal, IModalProps, useModalState, ModalProvider } from "../src";
+import ModalRoot from "../src/components/ModalRoot";
 
 describe("ModalProvider", () => {
   test("Renders children", async () => {
@@ -60,7 +55,7 @@ describe("ModalProvider", () => {
         </div>
       );
     };
-    const { getByText, findByText } = render(withProvider(<ModalLauncher />));
+    const { getByText } = render(withProvider(<ModalLauncher />));
 
     fireEvent.click(getByText("Open"));
     expect(getByText(text)).toBeTruthy();
@@ -87,7 +82,7 @@ describe("ModalProvider", () => {
         }
       );
 
-      setTimeout(() => void setState('loading', true), 100);
+      setTimeout(() => void setState("loading", true), 100);
 
       return <button onClick={open} role="open" />;
     };

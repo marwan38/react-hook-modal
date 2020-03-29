@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useCallback } from "react";
 import produce from "immer";
 import {
   IModalContext,
@@ -12,7 +12,8 @@ export const ModalContext = createContext<IModalContext>({
   add: () => ({
     open: () => void 0,
     close: () => void 0,
-    setState: () => void 0
+    setState: () => void 0,
+    cleanUp: () => void 0
   }),
   modalsState: {}
 });
@@ -31,44 +32,73 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
   const [modalsState, setModalsState] = useState<{
     [key: string]: IModalState;
   }>({});
-  const add = <T extends IModalProps>(
-    stateKey: string,
-    Modal: React.FC<T>,
-    props: Omit<T, "stateKey" | "close">,
-    state: Omit<IModalState, "close"> & Partial<T>
-  ) => {
-    /**
-     * Called by the modal initializer
-     * Closes the modal
-     */
-    const close = () => {
-      // Remove state for modal
-      // Do it in the next frame to make sure the component is gone
-      // before removing the state
-      requestAnimationFrame(
-        () =>
-          void setModalsState(modalsState =>
-            produce(modalsState, draftState => void delete draftState[stateKey])
-          )
-      );
-      void setModals(modals =>
-        produce(modals, draft => {
-          delete draft[stateKey];
-        })
-      );
-    };
 
-    /**
-     * Called by the modal initializer
-     * Opens the modal
-     */
-    const open = () => {
-      // Initialize state for modal
-      const hasState = !!modalsState[stateKey];
-      if (!hasState) {
+  const add = useCallback(
+    <T extends IModalProps>(
+      stateKey: string,
+      Modal: React.FC<T>,
+      props: Omit<T, "stateKey" | "close">,
+      state: Omit<IModalState, "close"> & Partial<T>
+    ) => {
+      /**
+       * Called by the modal initializer
+       * Closes the modal
+       */
+      const close = () => {
+        void setModals(modals =>
+          produce(modals, draft => {
+            delete draft[stateKey];
+          })
+        );
+      };
+
+      /**
+       * Called by the modal initializer
+       * Opens the modal
+       */
+      const open = () => {
+        void setModals(modals => {
+          // Create the element
+          return produce(modals, draft => {
+            draft[stateKey] = React.cloneElement(
+              // @ts-ignore 2322
+              <Modal key={stateKey} />,
+              {
+                ...props,
+                stateKey,
+                close
+              }
+            );
+          });
+        });
+      };
+
+      /**
+       * Called by the modal initializer
+       * Sets the state for the modal
+       */
+      const setState = <K extends keyof IModalState, V extends IModalState[K]>(
+        key: K,
+        value: V
+      ) => {
+        void setModalsState(_modalsState =>
+          produce(_modalsState, draftStates => {
+            draftStates[stateKey][key] = value;
+          })
+        );
+      };
+
+      const cleanUp = () => {
         void setModalsState(modalsState =>
-          produce(modalsState, draftState => {
-            draftState[stateKey] = {
+          produce(modalsState, draftState => void delete draftState[stateKey])
+        );
+      };
+
+      // Initalize state
+      if (!modalsState.hasOwnProperty(stateKey)) {
+        setModalsState(states =>
+          produce(states, draft => {
+            draft[stateKey] = {
               ...state,
               close
             };
@@ -76,54 +106,15 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
         );
       }
 
-      void setModals(modals => {
-        // Create the element
-        return produce(modals, draft => {
-          draft[stateKey] = React.cloneElement(
-            // @ts-ignore 2322
-            <Modal key={stateKey} />,
-            {
-              stateKey,
-              close,
-              ...props
-            }
-          );
-        });
-      });
-    };
-
-    /**
-     * Called by the modal initializer
-     * Sets the state for the modal
-     */
-    const setState = <K extends keyof IModalState, V extends IModalState[K]>(
-      key: K,
-      value: V
-    ) =>
-      void setModalsState(_modalsState =>
-        produce(_modalsState, draftStates => {
-          // State is only initialised after the modal has opened
-          // in the future we might want to initialize state on add
-          // and only remove it when the modal is removed
-          const hasState = !!modalsState[stateKey];
-          if (hasState) {
-            draftStates[stateKey][key] = value;
-          } else {
-            draftStates[stateKey] = {
-              ...state,
-              close,
-              [key]: value
-            };
-          }
-        })
-      );
-
-    return {
-      open,
-      close,
-      setState
-    };
-  };
+      return {
+        open,
+        close,
+        cleanUp,
+        setState
+      };
+    },
+    [modalsState]
+  );
 
   return (
     <ModalContext.Provider

@@ -14,7 +14,7 @@ yarn add @marwan38/react-hook-modal
 interface SampleModalProps extends IModalProps {
     onSubmit: (...args: any) => void;
 }
-const SampleModal: React.FC<SampleModalProps> = ({stateKey, onSubmit}) = {
+const SampleModal: React.FC<SampleModalProps> = ({stateKey, onSubmit}) = {  
     const state = useModalState(stateKey); // passed in dynamically by the provider when useModal is called. Contains the close method to close this modal
     const { dynamicData } = state;
     return (

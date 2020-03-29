@@ -1,21 +1,11 @@
 import * as React from "react";
-import {
-  withKnobs,
-  number,
-  select
-} from "@storybook/addon-knobs";
+import { withKnobs, number, select } from "@storybook/addon-knobs";
 import { config } from "react-spring";
-import {
-  ModalRoot,
-  ModalProvider,
-  useModal,
-  useModalState
-} from "../src";
+import { ModalProvider, useModal, useModalState } from "../src";
+import ModalRoot from "../src/components/ModalRoot";
 import { Props as ModalRootProps } from "../src/components/ModalRoot";
 import { Animations } from "../src/animations";
-import {
-  SelectTypeKnobValue,
-} from "@storybook/addon-knobs/dist/components/types";
+import { SelectTypeKnobValue } from "@storybook/addon-knobs/dist/components/types";
 
 export default {
   title: "ModalRoot",
@@ -30,7 +20,6 @@ const SampleModal: React.FC<Props & { stateKey: string }> = ({
   ...rest
 }) => {
   const state = useModalState(stateKey);
-  console.log(state);
   return (
     <ModalRoot stateKey={stateKey} {...rest}>
       {({ close }) => (
@@ -46,13 +35,10 @@ const Modal: React.FC<Props> = ({
   modalContainerAnim,
   overlaySpringConfig
 }) => {
-  const modal = useModal(
-    SampleModal,
-    {
-      modalContainerAnim,
-      overlaySpringConfig
-    }
-  );
+  const modal = useModal(SampleModal, {
+    modalContainerAnim,
+    overlaySpringConfig
+  });
 
   return (
     <div>
@@ -78,13 +64,19 @@ export const Main = () => {
     max: 1000,
     step: 50
   });
+
+  const [x, setX] = React.useState(true);
+
   return (
     <ModalProvider>
-      <Modal
-        key="modal-stories-1"
-        modalContainerAnim={Object.assign(animation, { config: animConfig })}
-        overlaySpringConfig={{ duration: overlayDuration }}
-      />
+      <button onClick={() => setX(x => !x)}>remove</button>
+      {x && (
+        <Modal
+          key="modal-stories-1"
+          modalContainerAnim={Object.assign(animation, { config: animConfig })}
+          overlaySpringConfig={{ duration: overlayDuration }}
+        />
+      )}
     </ModalProvider>
   );
 };

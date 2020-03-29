@@ -1,4 +1,4 @@
-import ModalRoot from "./components/ModalRoot";
+// import ModalRoot from "./components/ModalRoot";
 
 export {
   IModalProps,
@@ -8,7 +8,7 @@ export {
   IModalPortalProps
 } from "./types";
 
-export { ModalRoot };
+// export { ModalRoot };
 export { ModalProvider } from "./ModalProvider";
 export { useModal } from "./useModal";
 export { useModalState } from "./useModalState";

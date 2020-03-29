@@ -1,6 +1,5 @@
-import React from "react";
-import { IModalProps, IModalState } from "./types";
-import { useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { IModalProps, IModalState, IModalContext } from "./types";
 import { ModalContext } from "./ModalProvider";
 
 /**
@@ -12,7 +11,7 @@ export function useModal<T extends IModalProps>(
   props?: Omit<T, "stateKey">,
   state: Omit<IModalState, "close"> & Partial<T> = {}
 ) {
-  const modalContext = useContext(ModalContext);
+  const modalContext: IModalContext = useContext(ModalContext);
   if (!modalContext) {
     throw Error("Hook must be called from within the ModalProvider");
   }
@@ -21,15 +20,18 @@ export function useModal<T extends IModalProps>(
    * store it in a ref so it doesn't change
    */
   const stateKey = useRef(String(Date.now() + Math.random()));
-  const createdModal = modalContext.add(
-    stateKey.current,
-    modal,
-    props ?? {},
-    state
+  const [createdModal] = useState(() =>
+    modalContext.add(stateKey.current, modal, props ?? {}, state)
   );
 
   // Avoid memory leaks by killing modal when caller component is destroyed
-  useEffect(() => createdModal.close, []);
+  useEffect(
+    () => () => {
+      createdModal.close();
+      createdModal.cleanUp();
+    },
+    []
+  );
 
   return createdModal;
 }
