@@ -15,8 +15,10 @@ const tree = (component: React.FC<Props>) => (
 describe("ModalRoot", () => {
   test("Renders without exploding", async () => {
     const { getByText } = render(
-      tree(({ stateKey }) => (
-        <ModalRoot stateKey={stateKey}>String child</ModalRoot>
+      tree(({ stateKey, close }) => (
+        <ModalRoot stateKey={stateKey} close={close}>
+          String child
+        </ModalRoot>
       ))
     );
     fireEvent.click(getByText("Open"));

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
-import { IModalContext } from "./types";
+import { IModalContext, IModalProps } from "./types";
 import { ModalContext } from "./ModalProvider";
 
 /**
@@ -8,7 +8,7 @@ import { ModalContext } from "./ModalProvider";
  */
 export function useModal<P, S>(
   modal: React.FC<P>,
-  props?: P,
+  props?: Omit<P, "close" | "stateKey">,
   state?: S
 ) {
   const modalContext: IModalContext<P, S> = useContext(ModalContext);

@@ -40,9 +40,13 @@ describe("ModalProvider", () => {
     };
 
     const ModalLauncher = () => {
-      const { open, setState } = useModal(StubModal, {
-        loading: false
-      });
+      const { open, setState } = useModal(
+        StubModal,
+        {},
+        {
+          loading: false
+        }
+      );
 
       setTimeout(
         () =>
