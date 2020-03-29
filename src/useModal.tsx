@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { IModalContext } from "./types";
 import { ModalContext } from "./ModalProvider";
 
@@ -20,9 +20,7 @@ export function useModal<P, S>(
    * store it in a ref so it doesn't change
    */
   const stateKey = useRef(String(Date.now() + Math.random()));
-  const [createdModal] = useState(() =>
-    modalContext.add(stateKey.current, modal, props, state)
-  );
+  const createdModal = modalContext.add(stateKey.current, modal, props, state);
 
   // Avoid memory leaks by killing modal when caller component is destroyed
   useEffect(
