@@ -4,7 +4,7 @@ on:
     branches:
       - master # Change this to your default branch
 jobs:
-  npm-publish:
+  test-and-build:
     name: npm-publish
     runs-on: ubuntu-latest
     steps:
@@ -17,6 +17,11 @@ jobs:
     - run: yarn install
     - run: yarn test
     - run: yarn build
+  publish:
+    needs: test-and-build
+    name: npm-publish
+    runs-on: ubuntu-latest
+    steps:
     - name: Publish if version has been updated
       uses: pascalgn/npm-publish-action@51fdb4531e99aac1873764ef7271af448dc42ab4
       with: # All of theses inputs are optional

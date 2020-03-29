@@ -1,6 +1,6 @@
 import React, { useState, createContext, useCallback } from "react";
 import produce from "immer";
-import { IModalContext, IModalProviderProps, IModalProps } from "./types";
+import { IModalContext, IModalProviderProps } from "./types";
 import { ModalPortal } from "./ModalContainer";
 
 export const ModalContext = createContext<IModalContext<any>>({
