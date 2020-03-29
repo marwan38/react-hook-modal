@@ -1,7 +1,7 @@
 import { CSSProperties } from "react";
 import { UseTransitionProps } from "react-spring";
 
-type SpringAnimType = UseTransitionProps<boolean, CSSProperties>;
+export type SpringAnimType = UseTransitionProps<boolean, CSSProperties>;
 
 const MODAL_SLIDE_IN_TOP: SpringAnimType = {
   from: {

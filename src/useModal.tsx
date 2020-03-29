@@ -6,11 +6,12 @@ import { ModalContext } from "./ModalProvider";
  * @param modal - React.ReactNode
  * @param actions - onSubmit and onClose handlers
  */
-export function useModal<P extends IModalProps, S>(
+export function useModal<P, S>(
   modal: React.FC<P>,
+  props?: Omit<P, "close" | "stateKey">,
   state?: S
 ) {
-  const modalContext: IModalContext<S> = useContext(ModalContext);
+  const modalContext: IModalContext<P, S> = useContext(ModalContext);
   if (!modalContext) {
     throw Error("Hook must be called from within the ModalProvider");
   }
@@ -20,7 +21,7 @@ export function useModal<P extends IModalProps, S>(
    */
   const stateKey = useRef(String(Date.now() + Math.random()));
   const [createdModal] = useState(() =>
-    modalContext.add(stateKey.current, modal, state)
+    modalContext.add(stateKey.current, modal, props, state)
   );
 
   // Avoid memory leaks by killing modal when caller component is destroyed

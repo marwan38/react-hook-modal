@@ -11,7 +11,7 @@ yarn add @marwan38/react-hook-modal
 
 ```
 // Modal gets required props automatically passed through the provider
-const SampleModal: React.FC<IModalProps> = ({stateKey, close}) = {  
+const SampleModal: React.FC<IModalProps & { aProp: boolean }> = ({stateKey, close, aProp}) = {  
     const { dynamicData } = useModalState(stateKey);
     return (
         <div onClick={close}>
@@ -23,6 +23,9 @@ const SampleModal: React.FC<IModalProps> = ({stateKey, close}) = {
 const ModalLauncher = () => {
     const {open, close, setState} = useModal(
         SampleModal,
+        {
+            aProp: true
+        }, // Static (unchangable) props. Useful for callbacks
         {
             dynamicData: []
         }, // Accessed with the useModalState hook. Set by the setState function
@@ -50,7 +53,7 @@ const ModalLauncher = () => {
 
 `<ModalProvider />`: Wrap the root of your app with this
 
-### useModal(Component, state);
+### useModal(Component, props, state);
 ```
 const { open, close, setState } = useModal(ModalRoot, {...props}, {...state});
 

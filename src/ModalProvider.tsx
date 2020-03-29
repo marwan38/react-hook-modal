@@ -1,9 +1,9 @@
 import React, { useState, createContext, useCallback } from "react";
 import produce from "immer";
-import { IModalContext, IModalProviderProps } from "./types";
+import { IModalContext, IModalProviderProps, IModalProps } from "./types";
 import { ModalPortal } from "./ModalContainer";
 
-export const ModalContext = createContext<IModalContext<any>>({
+export const ModalContext = createContext<IModalContext<any, any>>({
   add: () => ({
     open: () => void 0,
     close: () => void 0,
@@ -29,7 +29,12 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
   }>({});
 
   const add = useCallback(
-    <T, S>(stateKey: string, Modal: React.FC<T>, state?: S) => {
+    <P extends IModalProps, S>(
+      stateKey: string,
+      Modal: React.FC<P>,
+      props?: Omit<P, "close" | "stateKey">,
+      state?: S
+    ) => {
       /**F
        * Called by the modal initializer
        * Closes the modal
@@ -55,7 +60,8 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
               <Modal key={stateKey} />,
               {
                 stateKey,
-                close
+                close,
+                ...props
               }
             );
           });

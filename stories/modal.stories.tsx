@@ -1,10 +1,10 @@
 import * as React from "react";
 import { withKnobs, number, select } from "@storybook/addon-knobs";
-import { config } from "react-spring";
+import { config, SpringConfig } from "react-spring";
 import { ModalProvider, useModal, useModalState } from "../src";
 import ModalRoot from "../src/components/ModalRoot";
 import { Props as ModalRootProps } from "../src/components/ModalRoot";
-import { Animations } from "../src/animations";
+import { Animations, Animation } from "../src/animations";
 import { SelectTypeKnobValue } from "@storybook/addon-knobs/dist/components/types";
 
 export default {
@@ -13,14 +13,15 @@ export default {
   decorators: [withKnobs]
 };
 
-interface Props
-  extends Omit<ModalRootProps, "children" | "stateKey" | "close"> {}
+interface Props extends Omit<ModalRootProps, "children" | "stateKey"> {
+  modalContainerAnim: Animation;
+  overlaySpringConfig: SpringConfig;
+}
 
 const SampleModal: React.FC<Props & {
   stateKey: string;
-  close: () => void;
-}> = ({ stateKey, ...rest }) => {
-  const {text, modalContainerAnim, overlaySpringConfig} = useModalState(stateKey);
+}> = ({ stateKey, modalContainerAnim, overlaySpringConfig, ...rest }) => {
+  const { text } = useModalState(stateKey);
   return (
     <ModalRoot
       stateKey={stateKey}
@@ -41,23 +42,28 @@ const Modal: React.FC<Props> = ({
   modalContainerAnim,
   overlaySpringConfig
 }) => {
-  const modal = useModal(SampleModal, {
-    modalContainerAnim,
-    overlaySpringConfig,
-    text: ''
-  });
-  const [value, setValue] = React.useState('');
-  const handleChange = (e) => {
+  const modal = useModal(
+    SampleModal,
+    {
+      modalContainerAnim,
+      overlaySpringConfig
+    },
+    {
+      text: "hi"
+    }
+  );
+  const [value, setValue] = React.useState("");
+  const handleChange = e => {
     const val = e.target.value;
     setValue(val);
     modal.setState(state => {
       state.text = val;
-    })
-  }
+    });
+  };
   return (
     <div>
       <button onClick={modal.open}>Open</button>
-      <input  value={value} onChange={handleChange}/>
+      <input value={value} onChange={handleChange} />
     </div>
   );
 };
