@@ -25,8 +25,8 @@ describe("ModalRoot", () => {
 
   test("Passes custom close function to children", async () => {
     const { getByText } = render(
-      tree(({ stateKey }) => (
-        <ModalRoot stateKey={stateKey}>
+      tree(props => (
+        <ModalRoot {...props}>
           {({ close }) => <div onClick={close}>CloseButton</div>}
         </ModalRoot>
       ))

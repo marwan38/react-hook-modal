@@ -13,18 +13,24 @@ export default {
   decorators: [withKnobs]
 };
 
-interface Props extends Omit<ModalRootProps, "children" | "stateKey"> {}
+interface Props
+  extends Omit<ModalRootProps, "children" | "stateKey" | "close"> {}
 
-const SampleModal: React.FC<Props & { stateKey: string }> = ({
-  stateKey,
-  ...rest
-}) => {
-  const state = useModalState(stateKey);
+const SampleModal: React.FC<Props & {
+  stateKey: string;
+  close: () => void;
+}> = ({ stateKey, ...rest }) => {
+  const {text, modalContainerAnim, overlaySpringConfig} = useModalState(stateKey);
   return (
-    <ModalRoot stateKey={stateKey} {...rest}>
+    <ModalRoot
+      stateKey={stateKey}
+      modalContainerAnim={modalContainerAnim}
+      overlaySpringConfig={overlaySpringConfig}
+      {...rest}
+    >
       {({ close }) => (
         <div style={{ width: 500, padding: 25 }} onClick={close}>
-          I am child
+          {text}
         </div>
       )}
     </ModalRoot>
@@ -37,12 +43,21 @@ const Modal: React.FC<Props> = ({
 }) => {
   const modal = useModal(SampleModal, {
     modalContainerAnim,
-    overlaySpringConfig
+    overlaySpringConfig,
+    text: ''
   });
-
+  const [value, setValue] = React.useState('');
+  const handleChange = (e) => {
+    const val = e.target.value;
+    setValue(val);
+    modal.setState(state => {
+      state.text = val;
+    })
+  }
   return (
     <div>
       <button onClick={modal.open}>Open</button>
+      <input  value={value} onChange={handleChange}/>
     </div>
   );
 };
@@ -65,15 +80,18 @@ export const Main = () => {
     step: 50
   });
 
-  const [x, setX] = React.useState(true);
+  const [modalAvailable, setModalAvailable] = React.useState(true);
 
   return (
     <ModalProvider>
-      <button onClick={() => setX(x => !x)}>remove</button>
-      {x && (
+      <button onClick={() => setModalAvailable(x => !x)}>remove</button>
+      {modalAvailable && (
         <Modal
           key="modal-stories-1"
-          modalContainerAnim={Object.assign(animation, { config: animConfig })}
+          modalContainerAnim={{
+            ...animation,
+            config: animConfig
+          }}
           overlaySpringConfig={{ duration: overlayDuration }}
         />
       )}

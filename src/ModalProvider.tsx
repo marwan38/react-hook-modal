@@ -1,14 +1,9 @@
 import React, { useState, createContext, useCallback } from "react";
 import produce from "immer";
-import {
-  IModalContext,
-  IModalProviderProps,
-  IModalProps,
-  IModalState
-} from "./types";
+import { IModalContext, IModalProviderProps, IModalProps } from "./types";
 import { ModalPortal } from "./ModalContainer";
 
-export const ModalContext = createContext<IModalContext>({
+export const ModalContext = createContext<IModalContext<any>>({
   add: () => ({
     open: () => void 0,
     close: () => void 0,
@@ -30,17 +25,12 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
     {}
   );
   const [modalsState, setModalsState] = useState<{
-    [key: string]: IModalState;
+    [key: string]: any;
   }>({});
 
   const add = useCallback(
-    <T extends IModalProps>(
-      stateKey: string,
-      Modal: React.FC<T>,
-      props: Omit<T, "stateKey" | "close">,
-      state: Omit<IModalState, "close"> & Partial<T>
-    ) => {
-      /**
+    <T, S>(stateKey: string, Modal: React.FC<T>, state?: S) => {
+      /**F
        * Called by the modal initializer
        * Closes the modal
        */
@@ -64,7 +54,6 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
               // @ts-ignore 2322
               <Modal key={stateKey} />,
               {
-                ...props,
                 stateKey,
                 close
               }
@@ -77,13 +66,10 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
        * Called by the modal initializer
        * Sets the state for the modal
        */
-      const setState = <K extends keyof IModalState, V extends IModalState[K]>(
-        key: K,
-        value: V
-      ) => {
+      const setState = (callback: (draftState: S) => void) => {
         void setModalsState(_modalsState =>
-          produce(_modalsState, draftStates => {
-            draftStates[stateKey][key] = value;
+          produce(_modalsState, draft => {
+            callback(draft[stateKey]);
           })
         );
       };
@@ -98,10 +84,7 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
       if (!modalsState.hasOwnProperty(stateKey)) {
         setModalsState(states =>
           produce(states, draft => {
-            draft[stateKey] = {
-              ...state,
-              close
-            };
+            draft[stateKey] = state ?? {};
           })
         );
       }

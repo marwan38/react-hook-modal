@@ -10,15 +10,11 @@ yarn add @marwan38/react-hook-modal
 ## Usage
 
 ```
-// Make sure to extend IModalProps
-interface SampleModalProps extends IModalProps {
-    onSubmit: (...args: any) => void;
-}
-const SampleModal: React.FC<SampleModalProps> = ({stateKey, onSubmit}) = {  
-    const state = useModalState(stateKey); // passed in dynamically by the provider when useModal is called. Contains the close method to close this modal
-    const { dynamicData } = state;
+// Modal gets required props automatically passed through the provider
+const SampleModal: React.FC<IModalProps> = ({stateKey, close}) = {  
+    const { dynamicData } = useModalState(stateKey);
     return (
-        <div onClick={state.close}>
+        <div onClick={close}>
             I am Modal
         </div>
     );
@@ -28,14 +24,22 @@ const ModalLauncher = () => {
     const {open, close, setState} = useModal(
         SampleModal,
         {
-            onSubmit: (args) => console.log(args)
-        }, // optional static props
-        {
             dynamicData: []
-        }, // optional state. Accessed with the useModalState hook. Set by the setState function
+        }, // Accessed with the useModalState hook. Set by the setState function
     );
+
+    const handleClick = () => {
+        
+        // setState returns the state passed in the 2nd argument of useModal
+        setState((state) => {
+            // setState uses immer under the hood!
+            // so mutate away!
+            // make sure to not return the value
+            state.dynamicData.push('whatever');
+        })
+    }
     return (
-        <button onClick={() => setState('dynamicData', [1,2,3])}>Add to state</button>
+        <button onClick={handleClick}>Add to state</button>
         <button onClick={open}>Open modal</button>
     );
 }
@@ -46,26 +50,28 @@ const ModalLauncher = () => {
 
 `<ModalProvider />`: Wrap the root of your app with this
 
-### useModal(Component, props, state);
+### useModal(Component, state);
 ```
 const { open, close, setState } = useModal(ModalRoot, {...props}, {...state});
 
 open(); // Launches the modal
 close(); // Closes the modal
-setState(key, value); // Keys are defined in the state argument of useModal.
+setState((draftState) => {}); Mutate the draftState
 ```
 
 ### useModalState(stateKey);
+You will have to manually pass an interface to it for typing. IE: `useModalState<State>(stateKey)`
 ```
 // Use within the modal component to access its state
-const { close, ...rest } = useModalState(stateKey); // State key is passed down through the props of the modal passed in the useModal() 1st argument.
-close() is always passed down through the state
+const state = useModalState(stateKey); // State key is passed down to the modal component
 ```
 
+## CURRENTLY UNAVAILABLE
+I havent figured out how to treeshake this component as I don't want to include react-spring as part of the package.
 ### ModalRoot (Helper component)
 
 ```
-<ModalRoot stateKey={stateKey} />
+<ModalRoot stateKey={stateKey} close={close} />
 
 interface ModalRootProps extends IModalProps {
   modalContainerAnim?: Animation;

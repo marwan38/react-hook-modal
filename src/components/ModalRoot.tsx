@@ -25,13 +25,11 @@ export interface Props extends IModalProps {
 }
 
 const ModalRoot: React.FunctionComponent<Props> = ({
+  close,
   children,
-  stateKey,
   overlaySpringConfig = config.default,
   modalContainerAnim = Animations.MODAL_FADE
 }) => {
-  const { close } = useModalState(stateKey as string);
-
   /** Used for animation initialization */
   const justInitialized = React.useRef(true);
   const [visible, setVisible] = React.useState(true);
@@ -61,11 +59,10 @@ const ModalRoot: React.FunctionComponent<Props> = ({
 
   /** Modal container animation */
   const modalRef = React.useRef();
-  const _modalContainerAnim = useTransition(
-    visible,
-    null,
-    Object.assign(modalContainerAnim, { ref: modalRef })
-  );
+  const _modalContainerAnim = useTransition(visible, null, {
+    ...modalContainerAnim,
+    ref: modalRef
+  });
 
   useChain(visible ? [containerRef, modalRef] : [modalRef, containerRef]);
 
@@ -81,8 +78,8 @@ const ModalRoot: React.FunctionComponent<Props> = ({
           item && (
             <animated.div key={key} style={props} className="--container">
               {typeof children === "function"
-                // @ts-ignore
-                ? children({ close: toggleClose }) 
+                ? // @ts-ignore
+                  children({ close: toggleClose })
                 : children}
             </animated.div>
           )
