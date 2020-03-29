@@ -2,7 +2,6 @@
 
 export {
   IModalProps,
-  IModalState,
   IModalContext,
   IModalProviderProps,
   IModalPortalProps
