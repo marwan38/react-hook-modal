@@ -64,9 +64,7 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
      */
     const open = () => {
       // Initialize state for modal
-      const hasState =
-        typeof modalsState[stateKey] !== "undefined" ||
-        typeof modalsState[stateKey] !== undefined;
+      const hasState = !!modalsState[stateKey];
       if (!hasState) {
         void setModalsState(modalsState =>
           produce(modalsState, draftState => {
@@ -107,9 +105,7 @@ export const ModalProvider: React.FC<IModalProviderProps> = ({
           // State is only initialised after the modal has opened
           // in the future we might want to initialize state on add
           // and only remove it when the modal is removed
-          const hasState =
-          typeof modalsState[stateKey] !== "undefined" ||
-          typeof modalsState[stateKey] !== undefined;
+          const hasState = !!modalsState[stateKey];
           if (hasState) {
             draftStates[stateKey][key] = value;
           } else {
