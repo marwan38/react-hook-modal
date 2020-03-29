@@ -1,11 +1,13 @@
 {
   "name": "@marwan38/react-hook-modal",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "build/index.js",
   "module": "build/index.es.js",
   "jsnext:main": "build/index.es.js",
-  "files": ["build"],
+  "files": [
+    "build"
+  ],
   "scripts": {
     "build": "rollup -c",
     "lint": "standard",
