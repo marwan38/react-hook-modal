@@ -13,13 +13,15 @@ export default {
   decorators: [withKnobs]
 };
 
-interface Props extends Omit<ModalRootProps, "children" | "stateKey"> {
+interface Props
+  extends Omit<ModalRootProps, "children" | "stateKey" | "close"> {
   modalContainerAnim: Animation;
   overlaySpringConfig: SpringConfig;
 }
 
 const SampleModal: React.FC<Props & {
   stateKey: string;
+  close: () => void;
 }> = ({ stateKey, modalContainerAnim, overlaySpringConfig, ...rest }) => {
   const { text } = useModalState(stateKey);
   return (

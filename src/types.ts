@@ -13,9 +13,17 @@ export interface IModalActions<S> {
   cleanUp: () => void;
 }
 
-export interface IModalContext<P, S> {
+export interface IModalContext<
+  P,
+  S
+> {
   /** Adds a modal component into the Modal Context */
-  add: (stateKey: string, modal: React.FC<any>, props?: P, state?: S) => IModalActions<S>;
+  add: (
+    stateKey: string,
+    modal: React.FC<any>,
+    props?: P,
+    state?: S
+  ) => IModalActions<S>;
   modalsState: { [key: string]: S | any };
 }
 

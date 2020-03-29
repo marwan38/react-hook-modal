@@ -8,7 +8,7 @@ import { ModalContext } from "./ModalProvider";
  */
 export function useModal<P, S>(
   modal: React.FC<P>,
-  props?: Omit<P, "close" | "stateKey">,
+  props?: P,
   state?: S
 ) {
   const modalContext: IModalContext<P, S> = useContext(ModalContext);
