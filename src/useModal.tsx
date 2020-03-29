@@ -1,14 +1,14 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
-import { IModalContext, IModalProps } from "./types";
+import { IModalContext } from "./types";
 import { ModalContext } from "./ModalProvider";
 
 /**
  * @param modal - React.ReactNode
  * @param actions - onSubmit and onClose handlers
  */
-export function useModal<P extends Omit<IModalProps, "close" | "state">, S>(
+export function useModal<P, S>(
   modal: React.FC<P>,
-  props?: P,
+  props?: Omit<P, "close" | "stateKey">,
   state?: S
 ) {
   const modalContext: IModalContext<P, S> = useContext(ModalContext);
