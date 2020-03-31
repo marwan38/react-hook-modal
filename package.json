@@ -1,7 +1,7 @@
 {
   "name": "@marwan38/react-hook-modal",
   "version": "0.2.8",
-  "description": "React modal hook to make using modals a breeze.",
+  "description": "React modal hook making modals with state a breeze",
   "main": "build/index.js",
   "module": "build/index.es.js",
   "jsnext:main": "build/index.es.js",
@@ -16,8 +16,7 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
-  "keywords": [],
-  "author": "Marwan Fikrat",
+  "author": "Marwan Fikrat <marwan.mm@live.com>",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.9.0",
@@ -103,5 +102,13 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/marwan38/react-hook-modal.git"
-  }
+  },
+  "keywords": [
+    "react",
+    "react hook",
+    "hook",
+    "portal",
+    "modal",
+    "react-portal"
+  ]
 }
