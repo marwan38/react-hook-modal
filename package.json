@@ -1,6 +1,6 @@
 {
   "name": "@marwan38/react-hook-modal",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "React modal hook making modals with state a breeze",
   "main": "build/index.js",
   "module": "build/index.es.js",
