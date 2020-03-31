@@ -1,7 +1,7 @@
 {
   "name": "@marwan38/react-hook-modal",
   "version": "0.2.7",
-  "description": "",
+  "description": "React modal hook to make using modals a breeze.",
   "main": "build/index.js",
   "module": "build/index.es.js",
   "jsnext:main": "build/index.es.js",
