@@ -17,12 +17,13 @@ interface Props
   extends Omit<ModalRootProps, "children" | "stateKey" | "close"> {
   modalContainerAnim: Animation;
   overlaySpringConfig: SpringConfig;
+  onSubmit: () => void;
 }
 
 const SampleModal: React.FC<Props & {
   stateKey: string;
   close: () => void;
-}> = ({ stateKey, modalContainerAnim, overlaySpringConfig, ...rest }) => {
+}> = ({ stateKey, modalContainerAnim, overlaySpringConfig, onSubmit, ...rest }) => {
   const { text } = useModalState(stateKey);
   return (
     <ModalRoot
@@ -34,6 +35,7 @@ const SampleModal: React.FC<Props & {
       {({ close }) => (
         <div style={{ width: 500, padding: 25 }} onClick={close}>
           {text}
+          <div onClick={onSubmit}>SUBMIT ME></div>
         </div>
       )}
     </ModalRoot>
@@ -44,11 +46,15 @@ const Modal: React.FC<Props> = ({
   modalContainerAnim,
   overlaySpringConfig
 }) => {
+  const [state, setState] = React.useState("");
   const modal = useModal(
     SampleModal,
     {
       modalContainerAnim,
-      overlaySpringConfig
+      overlaySpringConfig,
+      onSubmit: () => {
+        setState("I AM STATE");
+      }
     },
     {
       text: "hi"
@@ -65,7 +71,8 @@ const Modal: React.FC<Props> = ({
   return (
     <div>
       <button onClick={modal.open}>Open</button>
-      <input value={value} onChange={handleChange} />
+      <input value={state} onChange={e => setState(e.target.value)} />
+      {state}
     </div>
   );
 };
