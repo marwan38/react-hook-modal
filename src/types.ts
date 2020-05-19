@@ -1,4 +1,6 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/interface-name-prefix */
+import React from 'react';
+
 export interface IModalProps {
   /** Closes the modal. Passed down by the provider */
   close: () => void;
@@ -6,11 +8,13 @@ export interface IModalProps {
   stateKey: string;
 }
 
-export interface IModalActions<S> {
-  open: () => void;
+export interface IModalActions<P, S> {
+  open: (props?: Partial<P>) => void;
   close: () => void;
   setState: (callback: (draftState: S) => void) => void;
+  updateProps: (props: P) => void;
   cleanUp: () => void;
+  init: () => void;
 }
 
 export interface IModalContext<P, S> {
@@ -18,9 +22,9 @@ export interface IModalContext<P, S> {
   add: (
     stateKey: string,
     modal: React.FC<any>,
-    props?: Omit<P, "close" | "stateKey">,
+    props?: Omit<P, 'close' | 'stateKey'>,
     state?: S
-  ) => IModalActions<S>;
+  ) => IModalActions<Omit<P, 'close' | 'stateKey'>, S>;
   modalsState: { [key: string]: S | any };
 }
 
@@ -28,8 +32,4 @@ export interface IModalProviderProps {
   children: React.ReactNode;
   /** The portals root element */
   rootElement?: Element;
-}
-export interface IModalPortalProps
-  extends Required<Pick<IModalProviderProps, "rootElement">> {
-  modal: React.ReactElement;
 }
