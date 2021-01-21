@@ -42,7 +42,7 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.0",
     "identity-obj-proxy": "^3.0.0",
-    "immer": "^6.0.2",
+    "immer": "^8.0.1",
     "jest": "^24.9.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "node-sass": "^4.13.1",
